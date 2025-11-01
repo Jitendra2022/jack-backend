@@ -1,43 +1,33 @@
-// app.js
 import express from 'express';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import connectDB from './config/db.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config(); // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI;
-
-// Middleware for parsing JSON and form data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
-mongoose
-  .connect(MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log('✅ Connected to MongoDB'))
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+connectDB();
 
-// Example route
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use('/api/users', userRoutes);
+
+// Root route
 app.get('/', (req, res) => {
-  res.send('Hello, world! Express server is running 🚀');
-});
-
-// Example API route
-app.get('/api/status', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date() });
+  res.send('🚀 API is running...');
 });
 
 // Handle 404
 app.use((req, res) => {
-  res.status(404).json({ error: 'Route not found' });
+  res.status(404).json({ message: 'Route not found' });
 });
 
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(`✅ Server listening on http://localhost:${PORT}`);
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
