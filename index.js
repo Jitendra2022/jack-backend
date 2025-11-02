@@ -3,11 +3,14 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
+import cors from 'cors';
 
 // Load environment variables from .env
 dotenv.config();
 
 const app = express();
+// Allow all origins (for dev)
+app.use(cors());
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
